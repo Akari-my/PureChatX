@@ -1,0 +1,10 @@
+default-format: "{prefix}§l{name}§r{suffix} » {message}"
+default-nametag: "{prefix}{name}{suffix}"
+
+groups:
+  guest:
+    prefix: "§7[Guest] "
+    suffix: ""
+    format: '{prefix}§l{name}§r{suffix} » §7{message}'
+    link: "guest"
+    nametag: "§7{name}"

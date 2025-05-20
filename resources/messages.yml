@@ -1,0 +1,27 @@
+prefix: "§7[§6PCX§7] "
+
+reload:
+  success: "Configuration reloaded successfully."
+
+tag:
+  usage:
+    create: "§cUsage: /pcx create <name>"
+    delete: "§cUsage: /pcx delete <name>"
+    link: "§cUsage: /tag link <tag> <pureperms-group>"
+    set: "§c§cUsage: /pcx set <player> <tag>"
+    setformat: "§cUsage: /pcx setformat <tag> <format>"
+    setprefix: "§cUsage: /tag setprefix <tag> <prefix>"
+    setsuffix: "§cUsage: /pcx setsuffix <tag> <suffix>"
+
+  success:
+    create: "§7Tag §6{name}§7 created."
+    delete: "§7Tag §6{name}§a successfully deleted."
+    link: "§7Tag §6{tag}§a linked to group §6{group}§7."
+    set: "§7Player §6{player}§a has been assigned to tag §6{tag}."
+    setprefix: "§7Prefix for §6{tag}§a set to: §r{prefix}"
+    setsuffix: "§7Suffix for §6{tag}§a set to: §r{suffix}"
+    setformat: "§7Format for §6{tag}§a set to:\n§r{format}"
+
+  error:
+    not_linked: "§cThat tag is not linked to a PurePermsX group."
+    no_tags: "§cNo tags found."
