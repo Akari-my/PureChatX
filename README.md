@@ -2,7 +2,7 @@
 
 > 🔧 A modern, flexible chat formatting and nametag system for PocketMine-MP — fully integrated with [PurePermsX](https://github.com/Akari-my/PurePermsX)
 
-**PureChatX** is a other version of the original PurePerms. completely written from scratch, bringing customizable chat formats, dynamic nameTags, and group-based formatting for PocketMine-MP.
+**PureChatX** is a other version of the original PureChat. completely written from scratch, bringing customizable chat formats, dynamic nameTags, and group-based formatting for PocketMine-MP.
 
 ---
 
