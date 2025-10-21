@@ -44,7 +44,7 @@ tag:
   usage:
     create: "§cUsage: /pcx create <name>"
     delete: "§cUsage: /pcx delete <name>"
-    link: "§cUsage: /tag link <tag> <pureperms-group>"
+    link: "§cUsage: /pcx link <tag> <pureperms-group>"
     set: "§c§cUsage: /pcx set <player> <tag>"
     setformat: "§cUsage: /pcx setformat <tag> <format>"
     setprefix: "§cUsage: /tag setprefix <tag> <prefix>"
