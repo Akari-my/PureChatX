@@ -47,7 +47,7 @@ tag:
     link: "§cUsage: /pcx link <tag> <pureperms-group>"
     set: "§c§cUsage: /pcx set <player> <tag>"
     setformat: "§cUsage: /pcx setformat <tag> <format>"
-    setprefix: "§cUsage: /tag setprefix <tag> <prefix>"
+    setprefix: "§cUsage: /pcx setprefix <tag> <prefix>"
     setsuffix: "§cUsage: /pcx setsuffix <tag> <suffix>"
 
   success:
