@@ -2,20 +2,33 @@
 
 namespace Mellooh\PureChatX\commands\args;
 
-use Mellooh\PureChatX\commands\SubCommand;
+use Mellooh\libs\CommandoX\BaseSubCommand;
+use Mellooh\libs\CommandoX\CommandContext;
 use Mellooh\PureChatX\PCX;
 use Mellooh\PureChatX\utils\MessageManager;
-use pocketmine\command\CommandSender;
+use pocketmine\plugin\Plugin;
 
-class Reload implements SubCommand{
+class Reload extends BaseSubCommand {
 
-    public function execute(CommandSender $sender, array $args): void {
+    public function __construct(Plugin $plugin) {
+        parent::__construct($plugin, "reload", "Reload PureChatX configs");
+    }
 
-        PCX::getInstance()->getServer()->getPluginManager()->disablePlugin(PCX::getInstance());
-        PCX::getInstance()->getServer()->getPluginManager()->enablePlugin(PCX::getInstance());
-        PCX::getInstance()->reloadConfig();
-        PCX::getInstance()->getFormatManager()->reload();
+    protected function configure(): void {
+    }
 
-        $sender->sendMessage(MessageManager::get("reload.success"));
+    public function onRun(CommandContext $context): void {
+        /** @var PCX $pcx */
+        $pcx = $context->getPlugin();
+
+        $server = $pcx->getServer();
+        $pm = $server->getPluginManager();
+
+        $pm->disablePlugin($pcx);
+        $pm->enablePlugin($pcx);
+        $pcx->reloadConfig();
+        $pcx->getFormatManager()->reload();
+
+        $context->getSender()->sendMessage(MessageManager::get("reload.success"));
     }
 }

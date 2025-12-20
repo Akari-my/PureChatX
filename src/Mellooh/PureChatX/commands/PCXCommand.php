@@ -2,6 +2,9 @@
 
 namespace Mellooh\PureChatX\commands;
 
+use Mellooh\libs\CommandoX\BaseCommand;
+use Mellooh\libs\CommandoX\BaseSubCommand;
+use Mellooh\libs\CommandoX\CommandContext;
 use Mellooh\PureChatX\commands\args\Reload;
 use Mellooh\PureChatX\commands\args\TagCreate;
 use Mellooh\PureChatX\commands\args\TagDelete;
@@ -13,52 +16,44 @@ use Mellooh\PureChatX\commands\args\TagSetPlayer;
 use Mellooh\PureChatX\commands\args\TagSetPrefix;
 use Mellooh\PureChatX\commands\args\TagSetSuffix;
 use Mellooh\PureChatX\PCX;
-use pocketmine\command\Command;
-use pocketmine\command\CommandSender;
 use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginOwned;
 
-class PCXCommand extends Command implements PluginOwned{
+class PCXCommand extends BaseCommand implements PluginOwned {
 
-    private array $commands = [];
-    private PCX $plugin;
-
-    public function __construct(PCX $plugin) {
-        parent::__construct("pcx", "Manage chat tags", "/pcx help");
-        $this->plugin = $plugin;
-        $this->setPermission("pcx.use");
-
-        $this->commands = [
-            "create"     => new TagCreate(),
-            "delete"     => new TagDelete(),
-            "setprefix"  => new TagSetPrefix(),
-            "setsuffix"  => new TagSetSuffix(),
-            "setformat"  => new TagSetFormat(),
-            "link"       => new TagLink(),
-            "help" => new TagHelp(),
-            "set" => new TagSetPlayer(),
-            "list" => new TagList(),
-            "reload" => new Reload(),
-        ];
+    public function __construct(PCX $plugin, string $name = "pcx") {
+        parent::__construct($plugin, $name, "Manage chat tags", []);
     }
 
-    public function execute(CommandSender $sender, string $label, array $args): void {
-        if (!$sender->hasPermission("pcx.use")) {
-            $sender->sendMessage("§cYou don’t have permission to use this.");
-            return;
-        }
+    protected function configure(): void {
+        $this->setPermission("pcx.use");
+        $this->setPermissionMessageCustom("§cYou don’t have permission to use this.");
 
-        if (!isset($args[0]) || strtolower($args[0]) === "help") {
-            $this->commands["help"]->execute($sender, []);
-            return;
-        }
+        $this->registerSubCommand(new TagCreate($this->plugin));
+        $this->registerSubCommand(new TagDelete($this->plugin));
+        $this->registerSubCommand(new TagSetPrefix($this->plugin));
+        $this->registerSubCommand(new TagSetSuffix($this->plugin));
+        $this->registerSubCommand(new TagSetFormat($this->plugin));
+        $this->registerSubCommand(new TagLink($this->plugin));
+        $this->registerSubCommand(new TagSetPlayer($this->plugin));
+        $this->registerSubCommand(new TagList($this->plugin));
+        $this->registerSubCommand(new Reload($this->plugin));
+        $this->registerSubCommand(new TagHelp($this->plugin));
+    }
 
-        $sub = strtolower(array_shift($args));
-
-        if (isset($this->commands[$sub])) {
-            $this->commands[$sub]->execute($sender, $args);
+    public function onRun(CommandContext $context): void {
+        $sub = $this->subCommandsByName["help"] ?? null;
+        if ($sub instanceof BaseSubCommand) {
+            $sub->onRun(new CommandContext(
+                $this->plugin,
+                $context->getSender(),
+                $context->getLabel(),
+                [],
+                $this,
+                $sub
+            ));
         } else {
-            $sender->sendMessage("§cUnknown subcommand. Use §e/pcx help");
+            $context->getSender()->sendMessage("§eUse: §f/pcx help");
         }
     }
 

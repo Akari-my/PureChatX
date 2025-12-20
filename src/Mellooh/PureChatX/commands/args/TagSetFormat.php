@@ -2,26 +2,40 @@
 
 namespace Mellooh\PureChatX\commands\args;
 
-use Mellooh\PureChatX\commands\SubCommand;
+use Mellooh\libs\CommandoX\argument\RawTextArgument;
+use Mellooh\libs\CommandoX\argument\StringArgument;
+use Mellooh\libs\CommandoX\BaseSubCommand;
+use Mellooh\libs\CommandoX\CommandContext;
 use Mellooh\PureChatX\PCX;
 use Mellooh\PureChatX\utils\MessageManager;
-use pocketmine\command\CommandSender;
+use pocketmine\plugin\Plugin;
 
-class TagSetFormat implements SubCommand{
+class TagSetFormat extends BaseSubCommand {
 
-    public function execute(CommandSender $sender, array $args): void {
-        if (count($args) < 2) {
-            $sender->sendMessage(MessageManager::get("tag.usage.setformat"));
-            return;
-        }
+    public function __construct(Plugin $plugin) {
+        parent::__construct($plugin, "setformat", "Set tag chat format");
+    }
 
-        $tag = strtolower(array_shift($args));
-        $format = implode(" ", $args);
+    protected function configure(): void {
+        $this->registerArgument(0, new StringArgument("tag"));
+        $this->registerArgument(1, new RawTextArgument("format"));
+    }
 
-        PCX::getInstance()->getFormatManager()->setFormat($tag, $format);
-        $sender->sendMessage(MessageManager::get("tag.success.setformat", [
-            "tag" => $tag,
-            "format" => $format
-        ]));
+    public function onRun(CommandContext $context): void {
+        /** @var PCX $pcx */
+        $pcx = $context->getPlugin();
+        $sender = $context->getSender();
+
+        $tag    = strtolower((string)$context->getArg("tag"));
+        $format = (string)$context->getArg("format");
+
+        $pcx->getFormatManager()->setFormat($tag, $format);
+
+        $sender->sendMessage(
+            MessageManager::get("tag.success.setformat", [
+                "tag"    => $tag,
+                "format" => $format,
+            ])
+        );
     }
 }

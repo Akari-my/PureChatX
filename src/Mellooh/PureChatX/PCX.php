@@ -1,5 +1,23 @@
 <?php
 
+/**
+ *      _____   _______   __
+ *     |  __ \ / ____\ \ / /
+ *     | |__) | |     \ V /
+ *     |  ___/| |      > <
+ *     | |    | |____ / . \
+ *     |_|     \_____/_/ \_\
+ *
+ * This program is free plugin: you can redistribute it and/or modify
+ * * it under the terms of the GNU Lesser General Public License as published by
+ * * the Free plugin Foundation, either version 3 of the License, or
+ * * (at your option) any later version.
+ * *
+ * * @author Mellooh
+ * * @link https://github.com/Akari-my
+ *
+ */
+
 namespace Mellooh\PureChatX;
 
 use Mellooh\PureChatX\commands\PCXCommand;
@@ -30,19 +48,9 @@ class PCX extends PluginBase {
         MessageManager::init($this);
 
 
-        $this->getServer()->getCommandMap()->register("pcx", new PCXCommand($this));
+        $this->getServer()->getCommandMap()->register("purechatx", new PCXCommand($this, "pcx"));;
         $this->getServer()->getPluginManager()->registerEvents(new ChatListener(), $this);
-        $this->getLogger()->info("§6
-#  ______               _____ _           _  __   __
-#  | ___ \             /  __ | |         | | \ \ / /
-#  | |_/ _   _ _ __ ___| /  \| |__   __ _| |_ \ V / 
-#  |  __| | | | '__/ _ | |   | '_ \ / _` | __|/   \ 
-#  | |  | |_| | | |  __| \__/| | | | (_| | |_/ /^\ \
-#  \_|   \__,_|_|  \___|\____|_| |_|\__,_|\__\/   \/
-#                                                   
-# Enabled    
-# by Mellooh                               
-");
+        $this->getLogger()->info("§6PureChatX enabled successfully !");
 
     }
 

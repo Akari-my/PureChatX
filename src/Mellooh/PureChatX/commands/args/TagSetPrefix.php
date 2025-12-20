@@ -2,26 +2,40 @@
 
 namespace Mellooh\PureChatX\commands\args;
 
-use Mellooh\PureChatX\commands\SubCommand;
+use Mellooh\libs\CommandoX\argument\RawTextArgument;
+use Mellooh\libs\CommandoX\argument\StringArgument;
+use Mellooh\libs\CommandoX\BaseSubCommand;
+use Mellooh\libs\CommandoX\CommandContext;
 use Mellooh\PureChatX\PCX;
 use Mellooh\PureChatX\utils\MessageManager;
-use pocketmine\command\CommandSender;
+use pocketmine\plugin\Plugin;
 
-class TagSetPrefix implements SubCommand{
+class TagSetPrefix extends BaseSubCommand {
 
-    public function execute(CommandSender $sender, array $args): void {
-        if (count($args) < 2) {
-            $sender->sendMessage(MessageManager::get("tag.usage.setprefix"));
-            return;
-        }
+    public function __construct(Plugin $plugin) {
+        parent::__construct($plugin, "setprefix", "Set tag prefix");
+    }
 
-        $tag = strtolower(array_shift($args));
-        $prefix = implode(" ", $args);
+    protected function configure(): void {
+        $this->registerArgument(0, new StringArgument("tag"));
+        $this->registerArgument(1, new RawTextArgument("prefix"));
+    }
 
-        PCX::getInstance()->getFormatManager()->setPrefix($tag, $prefix);
-        $sender->sendMessage(MessageManager::get("tag.success.setprefix", [
-            "tag" => $tag,
-            "prefix" => $prefix
-        ]));
+    public function onRun(CommandContext $context): void {
+        /** @var PCX $pcx */
+        $pcx = $context->getPlugin();
+        $sender = $context->getSender();
+
+        $tag    = strtolower((string)$context->getArg("tag"));
+        $prefix = (string)$context->getArg("prefix");
+
+        $pcx->getFormatManager()->setPrefix($tag, $prefix);
+
+        $sender->sendMessage(
+            MessageManager::get("tag.success.setprefix", [
+                "tag"    => $tag,
+                "prefix" => $prefix,
+            ])
+        );
     }
 }

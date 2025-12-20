@@ -2,15 +2,27 @@
 
 namespace Mellooh\PureChatX\commands\args;
 
-use Mellooh\PureChatX\commands\SubCommand;
+use Mellooh\libs\CommandoX\BaseSubCommand;
+use Mellooh\libs\CommandoX\CommandContext;
 use Mellooh\PureChatX\PCX;
 use Mellooh\PureChatX\utils\MessageManager;
-use pocketmine\command\CommandSender;
+use pocketmine\plugin\Plugin;
 
-class TagList implements SubCommand {
+class TagList extends BaseSubCommand {
 
-    public function execute(CommandSender $sender, array $args): void {
-        $groups = PCX::getInstance()->getFormatManager()->getAllTags();
+    public function __construct(Plugin $plugin) {
+        parent::__construct($plugin, "list", "List all tags");
+    }
+
+    protected function configure(): void {
+    }
+
+    public function onRun(CommandContext $context): void {
+        /** @var PCX $pcx */
+        $pcx = $context->getPlugin();
+        $sender = $context->getSender();
+
+        $groups = $pcx->getFormatManager()->getAllTags();
 
         if (empty($groups)) {
             $sender->sendMessage(MessageManager::get("tag.error.no_tags"));
@@ -22,7 +34,7 @@ class TagList implements SubCommand {
         foreach ($groups as $tag => $data) {
             $prefix = $data["prefix"] ?? "";
             $linked = $data["link"] ?? "§c✖ not linked";
-            $sender->sendMessage(" §8- §e$tag §7(group: §b´" . $linked . "´§7)");
+            $sender->sendMessage(" §8- §e{$tag} §7(group: §b´{$linked}´§7)");
         }
     }
 }

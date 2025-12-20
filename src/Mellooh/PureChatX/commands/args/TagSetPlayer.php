@@ -2,25 +2,35 @@
 
 namespace Mellooh\PureChatX\commands\args;
 
-use Mellooh\PureChatX\commands\SubCommand;
+use Mellooh\libs\CommandoX\argument\StringArgument;
+use Mellooh\libs\CommandoX\BaseSubCommand;
+use Mellooh\libs\CommandoX\CommandContext;
 use Mellooh\PureChatX\PCX;
 use Mellooh\PureChatX\utils\MessageManager;
 use Mellooh\PurePermsX\PPX;
-use pocketmine\command\CommandSender;
+use pocketmine\plugin\Plugin;
 use pocketmine\Server;
 
-class TagSetPlayer implements SubCommand {
+class TagSetPlayer extends BaseSubCommand {
 
-    public function execute(CommandSender $sender, array $args): void {
-        if (count($args) < 2) {
-            $sender->sendMessage(MessageManager::get("tag.usage.set"));
-            return;
-        }
+    public function __construct(Plugin $plugin) {
+        parent::__construct($plugin, "set", "Assign a tag to a player");
+    }
 
-        $playerName = $args[0];
-        $tag = strtolower($args[1]);
+    protected function configure(): void {
+        $this->registerArgument(0, new StringArgument("player"));
+        $this->registerArgument(1, new StringArgument("tag"));
+    }
 
-        $fm = PCX::getInstance()->getFormatManager();
+    public function onRun(CommandContext $context): void {
+        /** @var PCX $pcx */
+        $pcx = $context->getPlugin();
+        $sender = $context->getSender();
+
+        $playerName = (string)$context->getArg("player");
+        $tag        = strtolower((string)$context->getArg("tag"));
+
+        $fm = $pcx->getFormatManager();
         $linkedGroup = $fm->getTagLink($tag);
 
         if (!$linkedGroup) {
@@ -38,9 +48,11 @@ class TagSetPlayer implements SubCommand {
             $player->setNameTag($prefix . $player->getDisplayName());
         }
 
-        $sender->sendMessage(MessageManager::get("tag.success.set", [
-            "player" => $playerName,
-            "tag" => $tag
-        ]));
+        $sender->sendMessage(
+            MessageManager::get("tag.success.set", [
+                "player" => $playerName,
+                "tag"    => $tag,
+            ])
+        );
     }
 }

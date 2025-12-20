@@ -2,21 +2,31 @@
 
 namespace Mellooh\PureChatX\commands\args;
 
-use Mellooh\PureChatX\commands\SubCommand;
+use Mellooh\libs\CommandoX\argument\StringArgument;
+use Mellooh\libs\CommandoX\BaseSubCommand;
+use Mellooh\libs\CommandoX\CommandContext;
 use Mellooh\PureChatX\PCX;
 use Mellooh\PureChatX\utils\MessageManager;
-use pocketmine\command\CommandSender;
+use pocketmine\plugin\Plugin;
 
-class TagDelete implements SubCommand{
+class TagDelete extends BaseSubCommand {
 
-    public function execute(CommandSender $sender, array $args): void {
-        if (!isset($args[0])) {
-            $sender->sendMessage(MessageManager::get("tag.usage.delete"));
-            return;
-        }
+    public function __construct(Plugin $plugin) {
+        parent::__construct($plugin, "delete", "Delete a tag");
+    }
 
-        $name = strtolower($args[0]);
-        PCX::getInstance()->getFormatManager()->deleteTag($name);
+    protected function configure(): void {
+        $this->registerArgument(0, new StringArgument("name"));
+    }
+
+    public function onRun(CommandContext $context): void {
+        /** @var PCX $pcx */
+        $pcx = $context->getPlugin();
+        $sender = $context->getSender();
+
+        $name = strtolower((string)$context->getArg("name"));
+        $pcx->getFormatManager()->deleteTag($name);
+
         $sender->sendMessage(MessageManager::get("tag.success.delete", ["name" => $name]));
     }
 }
