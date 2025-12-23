@@ -24,6 +24,7 @@ use Mellooh\PureChatX\commands\PCXCommand;
 use Mellooh\PureChatX\listener\ChatListener;
 use Mellooh\PureChatX\manager\ChatFormatManager;
 use Mellooh\PureChatX\utils\MessageManager;
+use Mellooh\PureChatX\utils\UpdateChecker;
 use pocketmine\plugin\PluginBase;
 
 class PCX extends PluginBase {
@@ -46,6 +47,7 @@ class PCX extends PluginBase {
 
         $this->formatManager = new ChatFormatManager($this);
         MessageManager::init($this);
+        UpdateChecker::check($this);
 
 
         $this->getServer()->getCommandMap()->register("purechatx", new PCXCommand($this, "pcx"));;
