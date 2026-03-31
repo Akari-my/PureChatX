@@ -11,25 +11,36 @@ use pocketmine\player\chat\LegacyRawChatFormatter;
 
 class ChatListener implements Listener{
 
+    private PCX $plugin;
+
+    public function __construct(PCX $plugin){
+        $this->plugin = $plugin;
+    }
+
     public function onJoin(PlayerJoinEvent $event){
         $player = $event->getPlayer();
         $name = strtolower($player->getName());
-        $group = PPX::getInstance()->getUserManager()->getGroup($name);
-        $formatManager = PCX::getInstance()->getFormatManager();
-        $tagGroup = $formatManager->getGroupByLink($group) ?? "default";
+        $ppx = PPX::getInstance();
+        if($ppx === null) return;
+
+        $group = $ppx->getUserManager()->getGroup($name) ?? "guest";
+        $formatManager = $this->plugin->getFormatManager();
+        $tagGroup = $formatManager->getGroupByLink($group) ?? "guest";
         $prefix = $formatManager->getPrefix($tagGroup);
 
         $player->setNameTag($prefix . $player->getDisplayName());
-        PPX::getInstance()->getPermissionHandler()->applyPermissions($player);
     }
 
     public function onChat(PlayerChatEvent $event): void {
         $player = $event->getPlayer();
         $name = strtolower($player->getName());
 
-        $group = PPX::getInstance()->getUserManager()->getGroup($name);
-        $fm = PCX::getInstance()->getFormatManager();
-        $tagGroup = $fm->getGroupByLink($group) ?? "default";
+        $ppx = PPX::getInstance();
+        if($ppx === null) return;
+
+        $group = $ppx->getUserManager()->getGroup($name) ?? "guest";
+        $fm = $this->plugin->getFormatManager();
+        $tagGroup = $fm->getGroupByLink($group) ?? "guest";
 
         $prefix = $fm->getPrefix($tagGroup);
         $suffix = $fm->getSuffix($tagGroup);

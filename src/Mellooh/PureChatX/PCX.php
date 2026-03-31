@@ -50,8 +50,8 @@ class PCX extends PluginBase {
         UpdateChecker::check($this);
 
 
-        $this->getServer()->getCommandMap()->register("purechatx", new PCXCommand($this, "pcx"));;
-        $this->getServer()->getPluginManager()->registerEvents(new ChatListener(), $this);
+        $this->getServer()->getCommandMap()->register("purechatx", new PCXCommand($this, "pcx"));
+        $this->getServer()->getPluginManager()->registerEvents(new ChatListener($this), $this);
         $this->getLogger()->info("§6PureChatX enabled successfully !");
 
     }

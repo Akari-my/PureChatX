@@ -60,16 +60,22 @@ class ChatFormatManager {
     }
 
     public function setPrefix(string $tag, string $prefix): void {
+        $tag = strtolower($tag);
+        if (!isset($this->groups[$tag])) return;
         $this->groups[$tag]["prefix"] = $prefix;
         $this->save();
     }
 
     public function setSuffix(string $tag, string $suffix): void {
+        $tag = strtolower($tag);
+        if (!isset($this->groups[$tag])) return;
         $this->groups[$tag]["suffix"] = $suffix;
         $this->save();
     }
 
     public function setFormat(string $tag, string $format): void {
+        $tag = strtolower($tag);
+        if (!isset($this->groups[$tag])) return;
         $this->groups[$tag]["format"] = $format;
         $this->save();
     }
@@ -99,6 +105,6 @@ class ChatFormatManager {
     }
 
     public function getNameTagFormat(string $tag): string {
-        return $this->groups[$tag]["nametag"] ?? $this->config->get("default-nametag", "{prefix}{name}{suffix}");
+        return $this->groups[$tag]["nametag"] ?? $this->groups[$tag]["nameTag"] ?? "{prefix}{name}{suffix}";
     }
 }
